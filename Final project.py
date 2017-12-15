@@ -171,10 +171,7 @@ class ResistantVirus(SimpleVirus):
         returns: True if this virus instance is resistant to the drug, False
         otherwise.
         """
-        if self.resistances[drug] == True:
-            return True
-        else:
-            return False
+        return self.resistances.get(drug, False)
 
 
     def reproduce(self, popDensity, activeDrugs):
@@ -212,28 +209,21 @@ class ResistantVirus(SimpleVirus):
         maxBirthProb and clearProb values as this virus. Raises a
         NoChildException if this virus particle does not reproduce.
         """
-        resist = False
-        if activeDrugs:
-            for drug in activeDrugs:
-                if self.getResistance(drug):
-                    resist = True
-                    break
-        else:
-            resist = True
-
-        if resist:
-            if random.random() <= (self.maxBirthProb * (1 - popDensity)):
-                newresistances = {}
-                for drug in self.resistances.keys():
-                    if random.random() <= (1 - self.mutProb):
-                        newresistances[drug] = self.resistances[drug]
-                    else:
-                        newresistances[drug] = not self.resistances[drug]
-                return ResistantVirus(self.maxBirthProb, self.clearProb, newresistances, self.mutProb)
-            else:
+        for drug in activeDrugs:
+            if not self.getResistance(drug):
                 raise NoChildException()
+
+        if random.random() <= (self.maxBirthProb * (1 - popDensity)):
+            newresistances = {}
+            for drug in self.resistances.keys():
+                if random.random() <= (1 - self.mutProb):
+                    newresistances[drug] = self.resistances[drug]
+                else:
+                    newresistances[drug] = not self.resistances[drug]
+            return ResistantVirus(self.maxBirthProb, self.clearProb, newresistances, self.mutProb)
         else:
             raise NoChildException()
+
 
 
 class Patient(SimplePatient):
@@ -432,7 +422,7 @@ def problem6():
             y_pop_total.append(y_pop)
             if y_pop <= 50:
                 cured_num = cured_num + 1
-        print(y_pop_total)
+        #print(y_pop_total)
         cured_prob = cured_num / patientsnum
         pl.hist(y_pop_total)
         pl.title(str(cured_prob * 100) + "% of patients were cured when the interval of two drugs is " + str(lagtime) + " timesteps")
@@ -440,7 +430,7 @@ def problem6():
         pl.ylabel('Number of patients')
         pl.show()
 
-#problem6()
+problem6()
 
 def problem7():
     """
@@ -512,4 +502,4 @@ def problem7():
     pl.legend()
     pl.show()
 
-#problem7()
+problem7()
