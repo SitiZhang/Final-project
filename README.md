@@ -101,6 +101,3 @@ Update()
 ## Sources Used:
 https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-00-introduction-to-computer-science-and-programming-fall-2008/assignments/pset12.pdf
 
-Final project report
-Problem 2
-It took about 100 steps before the virus population stops growing.
